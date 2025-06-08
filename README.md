@@ -144,7 +144,7 @@ Here's an example `profiles.yml` for a Snowflake connection (adjust for your spe
 
 `~/.dbt/profiles.yml`
 
-`airbnb_dbt: # This is the profile name, referenced in dbt_project.yml
+airbnb_dbt: # This is the profile name, referenced in dbt_project.yml
   target: dev
   outputs:
     dev:
@@ -157,7 +157,7 @@ Here's an example `profiles.yml` for a Snowflake connection (adjust for your spe
       warehouse: <your_warehouse>
       schema: dbt_your_username # Your development schema
       threads: 4
-      client_session_keep_alive: False`
+      client_session_keep_alive: False
 
 
 **Note**: For sensitive credentials, it's highly recommended to use environment variables instead of hardcoding them in `profiles.yml`.
