@@ -9,132 +9,227 @@ This setup is inspired by:
 - The [**jaffle_shop**](https://github.com/dbt-labs/jaffle_shop) example project, which outlines a simple pattern for staging, transforming, and analyzing data.
 - The Udemy course [**Complete dbt (Data Build Tool) Bootcamp: Zero to Hero**](https://www.udemy.com/course/complete-dbt-data-build-tool-bootcamp-zero-to-hero-learn-dbt/), created by the **dbt Learn Team**.
 
-The project follows best practices for:
+I understand you'd like the content of the `dbt_airbnb_readme` Canvas provided as plain text, formatted for easy copy-pasting to GitHub, which inherently uses Markdown. I'll provide the content without the immersive tags or the code block fences, allowing you to paste it directly into a `.md` file on GitHub.
 
-1. **Data Loading**: Ingesting CSV data into Snowflake.
-2. **Staging**: Creating **staging** models to clean and prepare raw data.
-3. **Transforming**: Building **intermediate** and **mart** layers to enrich and aggregate data.
-4. **Analyzing**: Leveraging **dbt** to easily manage models, run tests, and generate documentation.
 
----
+# dbt Airbnb Data Transformation Project
 
-## 📖 Overview
+This repository hosts a dbt (data build tool) project designed to transform raw Airbnb data into a structured and analyzable format. The project leverages staging models and advanced SQL transformations to create reliable and insightful datasets, ready for business intelligence and analytical reporting.
 
-The goal of this project is to:
+## 🌟 Features
 
-1. Ingest Airbnb data from a CSV file into Snowflake.
-2. Transform raw data into analytics-friendly models using dbt.
-3. Provide dimensional models (dimensions, facts) that can be easily queried and analyzed.
+* **Staging Layer**: Raw data is first ingested into a dedicated staging layer, ensuring data cleanliness and consistency before further transformations.
 
-Key components include:
+* **Advanced SQL Transformations**: Implements complex SQL logic, including aggregations, window functions, and data cleaning, to derive meaningful metrics and dimensions.
 
-- **Raw Data**: Sourced from CSV files (e.g., `input_data.csv`).
-- **Snowflake**: Serves as the data warehouse to store both the raw data and transformed models.
-- **dbt (Data Build Tool)**: Handles data transformations, testing, and documentation within Snowflake.
+* **Modular Design**: Organized into distinct dbt models (staging, intermediate, and final marts) for maintainability and scalability.
 
-This README outlines how everything is structured, following a simplified approach similar to **jaffle_shop**.
+* **Data Testing**: Includes dbt tests to ensure data quality and integrity at various stages of the transformation pipeline.
 
----
+* **Documentation**: Automatically generated dbt documentation provides a clear overview of all models, their lineage, and definitions.
 
-## 🏗 Project Structure
+## 📁 Project Structure
 
-The project is organized into several types of dbt models:
+The project follows a standard dbt structure:
+```
+.
+├── models
+│   ├── staging             # Raw data clean-up and type casting
+│   │   ├── stg_airbnb_calendar.sql
+│   │   ├── stg_airbnb_listings.sql
+│   │   ├── stg_airbnb_reviews.sql
+│   │   └── ...
+│   ├── intermediate        # Intermediate transformations, feature engineering
+│   │   ├── int_daily_occupancy.sql
+│   │   └── ...
+│   └── marts               # Final data marts for consumption
+│       ├── core
+│       │   ├── dim_listings.sql
+│       │   ├── dim_hosts.sql
+│       │   ├── fct_reviews.sql
+│       │   └── fct_bookings.sql
+│       └── agg
+│           ├── agg_daily_metrics.sql
+│           └── ...
+├── analyses                # Ad-hoc analytical queries
+├── macros                  # Reusable SQL logic
+├── seeds                   # Static data (e.g., lookup tables)
+├── tests                   # Custom data quality tests
+├── dbt_project.yml         # Project configuration
+└── profiles.yml            # (Local) Database connection configuration
+```
 
-- **Source Models (`src_*.sql`)**  
-  These models define your data sources (CSV files loaded into Snowflake). They provide a clear reference for all your raw data tables.
+## 📊 Data Models Overview (Conceptual)
 
-- **Staging Models (`stg_*.sql`)**  
-  Inspired by **jaffle_shop**, these models clean and unify data from the source layer. They typically handle tasks like:
-  - Renaming or casting fields.
-  - Filtering out invalid records.
-  - Standardizing date formats and keys.
+The project aims to build a comprehensive data model for Airbnb data, structured into several layers:
 
-- **Dimension Models (`dim_*.sql`)**  
-  These are transformations of your staged data into dimensions, holding descriptive attributes. For example, `dim_hosts_cleansed.sql` represents cleansed and standardized information about Airbnb hosts.
+### Staging Models (`models/staging`)
 
-- **Fact Models (`fct_*.sql`)**  
-  These models aggregate data into tables optimized for analytics. Fact models often contain metrics or measures (e.g., a reviews fact table that stores review counts, ratings, etc.).
+These models are the first layer of transformation, directly querying raw source data. Their primary purpose is to:
 
-- **Intermediate/Join Models (`dim_listings_w_hosts.sql`)**  
-  When you need to combine data from multiple dimensions (e.g., listings with their corresponding hosts), these models serve as an intermediate step, making further analysis simpler.
+* Standardize column names.
 
----
+* Apply basic data type conversions.
 
-## 📂 File Summary
+* Filter out irrelevant records.
 
-Below is a quick guide to the primary SQL models:
+* Ensure a consistent `id` field.
 
-- `src_hosts.sql` — Defines the source of host data (raw form).
-- `src_listings.sql` — Defines the source of listing data (raw form).
-- `src_reviews.sql` — Defines the source of review data (raw form).
-- `dim_hosts_cleansed.sql` — Cleans and transforms host data.
-- `dim_listings_cleansed.sql` — Cleans and transforms listing data.
-- `dim_listings_w_hosts.sql` — Joins listings and hosts for broader context.
-- `fct_reviews.sql` — Provides an aggregated fact table of reviews.
+*Examples:*
 
----
+* `stg_airbnb_listings`: Cleans and selects relevant columns from raw listings data.
 
-## ⚙️ Data Pipeline
+* `stg_airbnb_reviews`: Processes raw reviews data.
 
-1. **Ingest CSV Data into Snowflake**  
-   - Upload or load your `input_data.csv` into a Snowflake table (e.g., `RAW_AIRBNB_DATA`).
-   - Create external stages or use Snowflake’s load methods (e.g., `COPY INTO`) to bring the data into your environment.
+* `stg_airbnb_calendar`: Handles calendar-specific raw data.
 
-2. **Build dbt Models**  
-   - Source models (`src_*.sql`) reference the loaded raw data in Snowflake.
-   - Staging models (`stg_*.sql`) transform and clean this data according to best practices from **jaffle_shop**.
-   - Dimension and fact models (`dim_*.sql`, `fct_*.sql`) organize the data into analysis-ready tables.
+### Intermediate Models (`models/intermediate`)
 
-3. **Analyze and Visualize**  
-   - Once your models are materialized in Snowflake, use BI or data visualization tools (e.g., Looker, Tableau, or Mode) to analyze your Airbnb metrics and KPIs.
+This layer performs more complex, often multi-source, transformations and feature engineering.
 
----
+* `int_daily_occupancy`: Calculates daily occupancy rates based on calendar and booking data.
+
+### Mart Models (`models/marts`)
+
+The final layer, designed for direct consumption by BI tools or data analysts. These are typically dimensional and fact tables.
+
+*Examples:*
+
+* **Dimensions:**
+
+  * `dim_listings`: Contains unique listing attributes.
+
+  * `dim_hosts`: Details about hosts.
+
+* **Facts:**
+
+  * `fct_reviews`: Fact table for individual reviews, linked to listings and hosts.
+
+  * `fct_bookings`: Aggregated booking information.
+
+  * `agg_daily_metrics`: Daily aggregated metrics (e.g., average price, number of bookings).
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-1. **Snowflake** account with the necessary warehouse and database.
-2. **dbt** installed (CLI or Cloud version).
-3. A configured `profiles.yml` to connect dbt to your Snowflake environment.
+Before you begin, ensure you have the following installed:
 
-### Quickstart
+* **Python 3.8+**: [Download Python](https://www.python.org/downloads/)
 
-1. **Clone** this repository and navigate into the project directory:
+* **dbt-core**: Install via pip: `pip install dbt-core dbt-[your_database_adapter]` (e.g., `dbt-postgres`, `dbt-snowflake`, `dbt-bigquery`).
 
-   ```bash
-   git clone https://github.com/your-account/airbnb-dbt-snowflake.git
-   cd airbnb-dbt-snowflake
-   ```
+### 1. Clone the Repository
 
-2. **Install** dbt dependencies:
+git clone https://github.com/your-username/your-airbnb-dbt-project.git
+cd your-airbnb-dbt-project
 
-   ```bash
-   pip install dbt-snowflake
-   ```
 
-3. **Run** dbt commands:
+### 2. Set Up a Python Virtual Environment (Recommended)
 
-   ```bash
-   dbt deps
-   dbt seed
-   dbt run
-   dbt test
-   dbt docs generate
-   ```
+python -m venv venv
+source venv/bin/activate  # On Windows: `venv\Scripts\activate`
 
-## 🔨 Customization & Inspiration
 
-- **Adapt to Your Data**: While this project focuses on Airbnb datasets, you can customize the staging, dimension, and fact models to fit any CSV-based data.
-- **Inspired by jaffle_shop**: Check out [**jaffle_shop**](https://github.com/dbt-labs/jaffle_shop) to see how the dbt-labs team organizes source, staging, and modeling layers. It’s a great starting point for any new analytics project.
-- **Modular & Reusable**: Because each stage is decoupled, you can easily swap out or update specific models without affecting the rest of the pipeline.
+### 3. Install dbt Dependencies
 
-## 📄 Additional Resources
+pip install dbt-core dbt-snowflake # Replace dbt-snowflake with your database adapter
 
-- [dbt Documentation](https://docs.getdbt.com/)
-- [Snowflake SQL Reference](https://docs.snowflake.com/en/sql-reference/)
-- [jaffle_shop on GitHub](https://github.com/dbt-labs/jaffle_shop)
 
-## ⚖️ License
+### 4. Configure `profiles.yml`
 
-This project is licensed under the [MIT License](LICENSE). Feel free to use and adapt any part of this project in your own data workflows.
+dbt uses a `profiles.yml` file to connect to your data warehouse. You'll need to create or update this file in your `~/.dbt/` directory.
+
+Here's an example `profiles.yml` for a Snowflake connection (adjust for your specific data warehouse):
+
+# ~/.dbt/profiles.yml
+
+airbnb_dbt: # This is the profile name, referenced in dbt_project.yml
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <your_account_identifier>
+      user: <your_username>
+      password: <your_password> # Consider using environment variables for sensitive info
+      role: <your_role>
+      database: <your_database>
+      warehouse: <your_warehouse>
+      schema: dbt_your_username # Your development schema
+      threads: 4
+      client_session_keep_alive: False
+
+
+**Note**: For sensitive credentials, it's highly recommended to use environment variables instead of hardcoding them in `profiles.yml`.
+Example:
+
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD') }}"
+
+
+### 5. Verify Your dbt Setup
+
+Run `dbt debug` to ensure dbt can connect to your data warehouse:
+
+dbt debug --profile airbnb_dbt # Use the profile name defined in profiles.yml
+
+
+## 🏃 Running the Project
+
+### 1. Seed Static Data (if applicable)
+
+If your project includes seed files (.csv files in the seeds directory), load them into your data warehouse:
+
+dbt seed
+
+
+### 2. Run the dbt Models
+
+This command will execute all the SQL models in your project, creating or updating tables/views in your data warehouse:
+
+dbt run
+
+
+You can run specific models or groups of models:
+
+* Run only staging models: `dbt run --select models/staging`
+
+* Run only a specific model: `dbt run --select dim_listings`
+
+* Run a model and its downstream dependencies: `dbt run --select dim_listings+`
+
+### 3. Test Your Data
+
+Execute the defined data quality tests:
+
+dbt test
+
+
+### 4. Generate and Serve Documentation
+
+Generate a static website containing your project's documentation, lineage graphs, and model definitions:
+
+dbt docs generate
+dbt docs serve
+
+
+After `dbt docs serve`, open your web browser to the URL provided (usually `http://localhost:8080`).
+
+## ✍️ Contributing
+
+Contributions are welcome! Please feel free to open an issue or submit a pull request.
+
+1. Fork the repository.
+
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+
+5. Open a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+```
