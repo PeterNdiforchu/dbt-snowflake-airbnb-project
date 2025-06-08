@@ -15,6 +15,7 @@ This repository hosts a dbt (data build tool) project designed to transform raw 
 ## 📁 Project Structure
 The project follows a standard dbt structure:
 
+.`
 ├── models
 │   ├── staging             # Raw data clean-up and type casting
 │   │   ├── stg_airbnb_calendar.sql
@@ -39,6 +40,7 @@ The project follows a standard dbt structure:
 ├── tests                   # Custom data quality tests
 ├── dbt_project.yml         # Project configuration
 └── profiles.yml            # (Local) Database connection configuration
+`
 
 ## 📊 Data Models Overview (Conceptual)
 The project aims to build a comprehensive data model for Airbnb data, structured into several layers:
