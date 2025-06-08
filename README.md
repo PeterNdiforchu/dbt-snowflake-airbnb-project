@@ -16,7 +16,7 @@ This repository hosts a dbt (data build tool) project designed to transform raw 
 The project follows a standard dbt structure:
 Here's the dbt project structure in Markdown format, ready for display in GitHub:
 
-```markdown
+
 ```
 .
 ├── models
