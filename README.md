@@ -104,17 +104,17 @@ The final layer, designed for direct consumption by BI tools or data analysts. T
 
 * **Dimensions:**
 
-  * `dim_listings`: Contains unique listing attributes.
+  * `dim_listings_cleansed`: Contains unique listing attributes.
 
-  * `dim_hosts`: Details about hosts.
+  * `dim_hosts_cleansed`: Details about hosts.
 
 * **Facts:**
 
   * `fct_reviews`: Fact table for individual reviews, linked to listings and hosts.
 
-  * `fct_bookings`: Aggregated booking information.
+  * `fct_bookings`: Aggregated booking information. (Not included in the model)
 
-  * `agg_daily_metrics`: Daily aggregated metrics (e.g., average price, number of bookings).
+  * `agg_daily_metrics`: Daily aggregated metrics (e.g., average price, number of bookings) - (Not included in the model)
 
 ## 🚀 Getting Started
 
