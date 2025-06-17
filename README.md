@@ -9,8 +9,14 @@ This setup is inspired by:
 - The [**jaffle_shop**](https://github.com/dbt-labs/jaffle_shop) example project, which outlines a simple pattern for staging, transforming, and analyzing data.
 - The Udemy course [**Complete dbt (Data Build Tool) Bootcamp: Zero to Hero**](https://www.udemy.com/course/complete-dbt-data-build-tool-bootcamp-zero-to-hero-learn-dbt/), created by the **dbt Learn Team**.
 
-I understand you'd like the content of the `dbt_airbnb_readme` Canvas provided as plain text, formatted for easy copy-pasting to GitHub, which inherently uses Markdown. I'll provide the content without the immersive tags or the code block fences, allowing you to paste it directly into a `.md` file on GitHub.
+# Dashboard
+The dashboard below was built to communicate the following insights and metrics for Airbnb Product and Go-To-Market Executives:
+- Review Sentiments by season - full-moon vs non-full moon (Horizontal Stacked Bar Chart)
+- Frequency Distribution of SuperHost (Donut Chart)
+- Active Users by Year (Line Chart)
+- Price Distribution (Bar Chart)
 
+![Power BI Dashboard](assets/powerbi-report.png)
 
 # dbt Airbnb Data Transformation Project
 
@@ -61,7 +67,7 @@ The project follows a standard dbt structure:
 
 ## 📊 Data Models Overview (Conceptual)
 
-The project aims to build a comprehensive data model for Airbnb data, structured into several layers:
+The project aims to build a comprehensive data model for Airbnb data, structured into several layers. Below is a visual representation of the data flow and data 
 
 ### Staging Models (`models/staging`)
 
@@ -91,8 +97,9 @@ This layer performs more complex, often multi-source, transformations and featur
 
 ### Mart Models (`models/marts`)
 
-The final layer, designed for direct consumption by BI tools or data analysts. These are typically dimensional and fact tables.
+The final layer, designed for direct consumption by BI tools or data analysts. These are typically dimensional and fact tables. Below is simplified visual of the dbt dag:
 
+![simplified dbt dag](assets/dbt-solution-dag.png)
 *Examples:*
 
 * **Dimensions:**
